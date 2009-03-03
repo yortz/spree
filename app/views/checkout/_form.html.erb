@@ -40,6 +40,11 @@
   <p>
     <label for=""><%= t("state") %></label>
     <span id="bstate">
+      Length is <%= @states.length %> <br/>
+      <% if @states.length == 0 %>
+        <%= text_field("#{presenter_type}_presenter", :address_state_name, :autocomplete => 'off') %>
+      <% else %>
+
       <%= collection_select("checkout_presenter", 
         :bill_address_state_id, 
         @states, 
@@ -47,6 +52,7 @@
         :name, 
         {:include_blank => true}, 
         {:style=> 'width:150px;'}) %>
+      <% end %>
     </span>
   </p>
   <p>

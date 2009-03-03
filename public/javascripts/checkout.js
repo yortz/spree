@@ -12,7 +12,7 @@ jQuery.ajaxSetup({
 
 jQuery.fn.submitWithAjax = function() {
   this.change(function() {
-    $.post('select_country', $(this).serialize(), null, "script");
+    $.post('checkout/select_country', $(this).serialize(), null, "script");
     return false;
   })
   return this;
@@ -40,7 +40,7 @@ jQuery.fn.sameAddress = function() {
 
 //On page load
 $(function() {  
-  //$("#checkout_presenter_bill_address_country_id").submitWithAjax();  
+  $("#checkout_presenter_bill_address_country_id").submitWithAjax();  
   $('#checkout_presenter_same_address').sameAddress();
   $('span#bcountry select').change(function() { update_state('b'); });
   $('span#scountry select').change(function() { update_state('s'); });
