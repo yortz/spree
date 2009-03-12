@@ -1,0 +1,3 @@
+[submodule "vendor/gems/active_merchant-1.4.1.p3d"]
+	path = vendor/gems/active_merchant-1.4.1.p3d
+	url = git://github.com/paulcc/active_merchant.git
