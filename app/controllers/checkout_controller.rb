@@ -4,7 +4,9 @@ class CheckoutController < Spree::BaseController
   before_filter :load_data
   before_filter :build_object, :except => [:new, :create]
 
-  ssl_required :new, :create
+  ssl_required :new, :create, :complete_3dsecure, :callback_3dsecure
+
+  protect_from_forgery :except => :callback_3dsecure
 
   resource_controller   
   model_name :checkout_presenter
@@ -19,9 +21,32 @@ class CheckoutController < Spree::BaseController
     @order.ip_address = request.env['REMOTE_ADDR']
     
     begin
-      if object.save
+      result = object.save
+      if result.is_a?(CreditcardTxn)
         # remove the order from the session
         session[:order_id] = nil if @order.checkout_complete  
+
+        # speculative - surely the only place this can be called????
+        # puts "$$$$$$$$$$$$$$$$$$ place - 1st time"
+        respond_to do |format|
+          format.html {redirect_to order_url(@order, :checkout_complete => true) }
+          format.js {render :json => { :order => @checkout_presenter.order_hash, 
+                                       :available_methods => @order.shipment.rates }.to_json,
+                            :layout => false}
+        end
+      elsif result.is_a?(Proc) 
+        @callback = request.protocol + request.host + "/orders/#{@order.number}/checkout/callback_3dsecure"
+        @fragment = result
+        render :action => '3dsecure_verification'
+      elsif not result.nil?
+        # speculative - surely the only place this can be called????
+        # puts "$$$$$$$$$$$$$$$$$$ place - catchall"
+        respond_to do |format|
+          format.html {redirect_to order_url(@order, :checkout_complete => true) }
+          format.js {render :json => { :order => @checkout_presenter.order_hash, 
+                                       :available_methods => @order.shipment.rates }.to_json,
+                            :layout => false}
+        end
       else
         flash[:error] = t("unable_to_save_order")
         render :action => "new" and return
@@ -30,16 +55,38 @@ class CheckoutController < Spree::BaseController
       flash.now[:error] = t("unable_to_authorize_credit_card") + ": #{ge.message}"
       render :action => "new" and return 
     end
-        
-    respond_to do |format|
-      format.html {redirect_to order_url(@order, :checkout_complete => true) }
-      format.js {render :json => { :order => @checkout_presenter.order_hash, 
-                                   :available_methods => @order.shipment.rates }.to_json,
-                        :layout => false}
-    end
-    
   end         
 
+  def secure_form
+    render :text => session["3Dform"]
+  end 
+
+  def callback_3dsecure
+    @callback = request.protocol + request.host + "/orders/#{params["order_number"]}/checkout/complete_3dsecure"
+    render :action => "callback_3dsecure", :layout => false
+  end
+
+  def complete_3dsecure
+    @order = Order.find_by_number(params[:order_number])
+    payment = @order.creditcard_payments.last
+    begin
+      ActiveRecord::Base.transaction do
+        # pass confirmation codes back to gateway, and fill in response code
+        # NOTE: completion does NOT require valid CC details
+        payment.creditcard.complete_3dsecure(params)
+        @order.complete
+        session[:order_id] = nil if @order.checkout_complete  
+      end
+      respond_to do |format|
+        format.html {redirect_to order_url(@order, :checkout_complete => true)}
+	# unused? , :target => "_top") }
+      end
+    rescue Spree::GatewayError => ge
+      flash.now[:error] = t("unable_to_authorize_credit_card") + ": #{ge.message}"
+      render :action => "new" and return 
+    end
+  end
+         
   def cvv
     render :layout => false
   end  

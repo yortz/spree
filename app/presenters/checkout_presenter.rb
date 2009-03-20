@@ -23,36 +23,50 @@ class CheckoutPresenter < ActivePresenter::Base
   
   def save           
     return false if final_answer and not valid?
-    saved = false
+    saved = nil
+
+    # save and fix the final order details
     ActiveRecord::Base.transaction do
-      # clear existing shipments (no orphans please)                             
-      order.shipments.clear
       # clear existing addresses, eventually this won't be necessary (we'll have an address book)
       order.user.addresses.clear
-      
       order.user.addresses << bill_address.clone
       
+      # clear existing shipments (no orphans please)                             
+      order.shipments.clear
       order.shipments.create(:address => ship_address, :shipping_method => shipping_method)
       
       order.ship_amount = order.shipment.shipping_method.calculate_shipping(order.shipment) if order.shipment and order.shipment.shipping_method
       order.tax_amount = order.calculate_tax
       order.save
-      
-      if final_answer
-        # authorize the credit card and then save (authorize first before number is cleared for security purposes)
-        creditcard.order = order
-        creditcard.authorize(order.total)
-        creditcard.save
-        order.complete
-      end      
-      saved = true
-    end  
-    # populate the order hash  
-    
+    end
+
+    # populate the order hash from the information just set
     order_hash[:ship_amount] = number_to_currency(order.ship_amount)
     order_hash[:tax_amount] = number_to_currency(order.tax_amount)
     order_hash[:order_total] = number_to_currency(order.total)
     order_hash[:ship_method] = order.shipment.shipping_method.name if order.shipment and order.shipment.shipping_method
+ 
+    # do the CC stuff ONLY IF it is definitely the final step
+    if final_answer
+      ActiveRecord::Base.transaction do
+        # authorize the credit card and then save 
+        # (authorize first before number is cleared for security purposes)
+        # idea - shift the TX to here.
+        # also do the error decoding here
+        creditcard.order = order
+        result = creditcard.authorize(order.total)
+
+        saved = result
+        creditcard.save 	# TMP, expect all details to go through
+
+        if result.is_a?(CreditcardTxn)
+          order.complete
+        end 
+      end
+    end      
+    saved = "speculative" if saved.nil? 
+    # saved = true		## flag for what??? duplicate logic???? TODO
+
     saved  
   end
 end
