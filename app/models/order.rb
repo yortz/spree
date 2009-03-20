@@ -151,6 +151,18 @@ class Order < ActiveRecord::Base
     return nil if shipments.empty?
     return shipment.address
   end      
+
+  # register a new creditcard payment sequence, returning the transaction added
+  def new_payment(card, taken_amount, auth_amount, auth_code, txn_type)
+    payment = creditcard_payments.create(:amount => taken_amount, :creditcard => card)
+    # create a transaction to reflect the authorization
+    transaction = CreditcardTxn.new( :amount => auth_amount,
+                                     :response_code => auth_code,
+                                     :txn_type => txn_type )
+    payment.creditcard_txns << transaction
+    transaction
+  end
+
  
   include Spree::ShippingCalculator
  

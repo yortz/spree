@@ -4,18 +4,39 @@ module Spree
       gateway = payment_gateway       
       # ActiveMerchant is configured to use cents so we need to multiply order total by 100
       response = gateway.authorize((amount * 100).to_i, self, gateway_options)      
-      gateway_error(response) unless response.success?
-      
-      # create a creditcard_payment for the amount that was authorized
-      creditcard_payment = order.creditcard_payments.create(:amount => 0, :creditcard => self)
-      # create a transaction to reflect the authorization
-      creditcard_payment.creditcard_txns << CreditcardTxn.new(
-        :amount => amount,
-        :response_code => response.authorization,
-        :txn_type => CreditcardTxn::TxnType::AUTHORIZE
-      )
+
+       # 3ds code derived from http://github.com/andyjeffries/active_merchant/commit/d25199d218e06cb20d61268d39cdb050fe54bd85
+
+      if response.success?
+        # create a creditcard_payment for the amount that was authorized
+
+        order.new_payment(self, 0, amount, response.authorization, CreditcardTxn::TxnType::AUTHORIZE) 
+
+      elsif response.requires_3dsecure?
+        # save a transaction -- but without a response code
+        # store the MD code instead to allow finding of txn later (TODO: abstract)
+        transaction = order.new_payment(self, 0, amount, nil, CreditcardTxn::TxnType::AUTHORIZE) 
+        transaction.md = response.params["MD"]
+        transaction.save
+        gateway.form_for_3dsecure_verification(response.params)
+      else
+        gateway_error(response) 
+      end
+
     end
 
+    # doesn't require CC state - only depends on the parameters
+    def complete_3dsecure(params)
+      params["VendorTxCode"] = order.number
+      response = payment_gateway.complete_3dsecure(params)
+      gateway_error(response) unless response.success?          
+
+      txn = CreditcardTxn.find_by_md(params["MD"])
+      txn.response_code = response.authorization
+      txn.save
+    end
+
+    # TODO - check for 3dsecure
     def capture(authorization)
       gw = payment_gateway
       response = gw.capture((authorization.amount * 100).to_i, authorization.response_code, minimal_gateway_options)
@@ -24,6 +45,7 @@ module Spree
       creditcard_payment.creditcard_txns.create(:amount => authorization.amount, :response_code => response.authorization, :txn_type => CreditcardTxn::TxnType::CAPTURE)
     end
 
+    # TODO - revise for 3dsecure
     def purchase(amount)
       #combined Authorize and Capture that gets processed by the ActiveMerchant gateway as one single transaction.
       gateway = payment_gateway 
@@ -32,13 +54,7 @@ module Spree
       
       
       # create a creditcard_payment for the amount that was purchased
-      creditcard_payment = order.creditcard_payments.create(:amount => amount, :creditcard => self)
-      # create a transaction to reflect the purchase
-      creditcard_payment.creditcard_txns << CreditcardTxn.new(
-        :amount => amount,
-        :response_code => response.authorization,
-        :txn_type => CreditcardTxn::TxnType::PURCHASE
-      )
+      order.new_payment(self, amount, amount, response.authorization, CreditcardTxn::TxnType::PURCHASE)
     end
 
     def void
@@ -68,8 +84,17 @@ module Spree
     # Generates an ActiveMerchant compatible address hash from one of Spree's address objects
     def generate_address_hash(address)
       return {} if address.nil?
-      {:name => address.full_name, :address1 => address.address1, :address2 => address.address2, :city => address.city,
-       :state => address.state_text, :zip => address.zipcode, :country => address.country.iso, :phone => address.phone}
+      { :name => address.full_name, 
+        :lastname => address.lastname, 
+        :firstnames => address.firstname, 
+        :address1 => address.address1, 
+        :address2 => address.address2, 
+        :city => address.city,
+        :state => address.state_text, 
+        :state_abbr => address.state.nil? ? nil : address.state.abbr,
+        :zip => address.zipcode, 
+        :country => address.country.iso, 
+        :phone => address.phone }
     end
     
     # Generates a minimal set of gateway options.  There appears to be some issues with passing in 
@@ -79,7 +104,7 @@ module Spree
       {:email => order.user.email, 
        :customer => order.user.email, 
        :ip => order.ip_address, 
-       :order_id => order.number,
+       :order_id => order.number, 	## OUT  + "_" + rand(1000).to_s, #pcc hack
        :shipping => order.ship_amount * 100,
        :tax => order.tax_amount * 100, 
        :subtotal => order.item_total * 100}  
