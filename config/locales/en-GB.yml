@@ -22,7 +22,7 @@ en-GB:
         firstname: "First Name"
         lastname: "Last Name"
         phone: Phone
-        zipcode: "Post Code"
+        zipcode: "Postcode"
       country: 
         iso: ISO
         iso3: ISO3
@@ -415,8 +415,8 @@ en-GB:
   status: Status
   stop: Stop
   store: Store
-  street_address: "Street Address"
-  street_address_2: "Street Address (cont'd)"
+  street_address: "Address Line 1"
+  street_address_2: "Address Line 2"
   subtotal: Subtotal
   subtract: Subtract
   system: System
@@ -458,7 +458,7 @@ en-GB:
   whats_this: "What's this"
   width: Width
   your_cart_is_empty: "Your basket is empty"
-  zip: Post Code
+  zip: Postcode
   zone: Zone
   zone_based: "Zone Based"
   zone_setting_description: "Collections of countries, states or other zones to be used in various calculations."
