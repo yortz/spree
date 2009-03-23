@@ -386,11 +386,11 @@ en-GB:
   ship_address: "Ship Address"
   shipment: Shipment
   shipped: Shipped
-  shipping: Shipping
-  shipping_address: "Shipping Address"
-  shipping_error: "Shipping Error"
-  shipping_method: "Shipping Method"
-  shipping_total: "Shipping Total"
+  shipping: Delivery
+  shipping_address: "Delivery Address"
+  shipping_error: "Delivery Error"
+  shipping_method: "Delivery Method"
+  shipping_total: "Delivery Total"
   shopping_cart: "Shopping Basket"
   show_deleted: "Show Deleted"
   show_incomplete_orders: "Show Incomplete Orders"
@@ -440,9 +440,9 @@ en-GB:
   unable_to_capture_credit_card: "Unable to Capture Credit Card"
   update: Update
   updated_successfully:
-  use_as_shipping_address: Use as Shipping Address
+  use_as_shipping_address: Use as Delivery Address
   use_billing_address: Use Billing Address
-  use_different_shipping_address: "Use Different Shipping Address"
+  use_different_shipping_address: "Use Different Delivery Address"
   user: User
   user_account: User Account
   user_details: "User Details"
