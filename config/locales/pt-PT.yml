@@ -278,6 +278,8 @@ pt-PT:
   locale_changed: "Localização Alterada"
   log_in: Entre
   logged_in_as: "Registado como"
+  logged_in_successfully: "Logged in successfully."
+  login_authentication_failed: "Login authentication failed."
   login_name: "Nome de Login"
   logout: Sair
   mail_delivery_enabled: "Envio de email permitido"
@@ -437,7 +439,9 @@ pt-PT:
   tree: Árvore
   try_again: "Tente de novo"
   type: Tipo
+  unable_to_authorize_credit_card: "Unable to Authorize Credit Card"
   unable_to_capture_credit_card: "Unable to Capture Credit Card"
+  unable_to_save_order: "Unable to Save Order"
   update: Actualizar
   updated_successfully: Actualizado com sucesso
   use_as_shipping_address: Use as Shipping Address
@@ -457,6 +461,7 @@ pt-PT:
   what_is_this: "O que é isto?"
   whats_this: "O que é isto?"
   width: Largura
+  you_have_been_logged_out: "You have been logged out."
   your_cart_is_empty: "O carro está vazio"
   zip: Codigo Postal
   zone: Zona
