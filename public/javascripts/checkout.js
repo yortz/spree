@@ -167,12 +167,12 @@ var shift_to_region = function(active) {
 
 var submit_billing = function() {
   shift_to_region('shipping');
-  build_address('Billing Address', 'b');
+  build_address('b');
   return;
 };
 
-var build_address = function(title, region) {
-  var address = '<h3>' + title + '</h3>';
+var build_address = function(region) {
+  var address = '';
   address += $('p#' + region + 'fname input').val() + ' ' + $('p#blname input').val() + '<br />';
   address += $('p#' + region + 'address input').val() + '<br />';
   if($('p#' + region + 'address2').val() != '') {
@@ -187,7 +187,7 @@ var build_address = function(title, region) {
   address += ' ' + $('p#' + region + 'zip input').val() + '<br />';
   address += $('p#' + region + 'country :selected').html() + '<br />';
   address += $('p#' + region + 'phone input').val();
-  $('div#' + region + 'display').html(address);
+  $('div#' + region + 'display div').html(address);
   return;
 };
 
@@ -212,7 +212,7 @@ var submit_shipping = function() {
     }
   });  
   shift_to_region('shipping_method');
-  build_address('Shipping Address', 's');
+  build_address('s');
   return;
 };
                      
