@@ -3,8 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 include Admin::ProductsHelper 
 include Admin::BaseHelper
 
+out = File.open "xyzxyz", "w"
+
 describe '/admin/variants/edit' do
-  
+ 
   before(:each) do
     
     Admin::BaseHelper.class_eval do
@@ -42,21 +44,28 @@ describe '/admin/variants/edit' do
         {:name => 'Width', :only => [:variant], :format => "%.2f"},
         {:name => 'Depth', :only => [:variant], :populate => [:line_item]}
       ]
+    out.puts "setup end ****************"
   end
 
+  out.puts "before it ****************"
   it "should display the standard edit form" do
+    out.puts "1 ****************"
     Variant.stub!(:additional_fields).and_return([])
+    out.puts "1 ****************"
     render '/admin/variants/edit'
         
+    out.puts "1 ****************"
     response.should have_tag('form[method=?][action=?]', 'post', "") do
       with_tag("input[type=?][id=?][value=?]", 'text', 'variant_sku', @variant.sku)
       
+      out.puts "1 ****************"
       #check that option type and values are displayed (read only)
       with_tag("table") do
         with_tag("td", :text => @option_type.presentation + ":")
         with_tag("td", :text => @option_value.presentation)
       end
       
+      out.puts "1 ****************"
       with_tag("input[type=?][id=?][value=?]", 'text', 'variant_sku', @variant.sku)
       with_tag("input[type=?][id=?][value=?]", 'text', 'variant_price', @variant.price)    
       with_tag("input[type=?][id=?][value=?]", 'text', 'variant_on_hand', @variant.on_hand)     
