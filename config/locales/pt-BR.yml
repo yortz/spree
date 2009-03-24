@@ -235,7 +235,7 @@ pt-BR:
   error: erro
   event: Event
   existing_customer: "Existing Customer"
-  expiration: Expiration
+  expiration: "Expiration"
   expiration_month: "Mês de Expiração"
   expiration_year: "Ano de Expiração"
   extension: Extensão
@@ -246,6 +246,7 @@ pt-BR:
   gateway: Gateway
   gateway_error: "Gateway Error"
   gateway_setting_description: "Selecionar um gateway de pagamento e ajustar suas configurações."
+  general: "General"
   general_settings: "General Settings"
   general_settings_description: "Configure general Spree settings."
   google_analytics: "Google Analytics"
@@ -256,6 +257,7 @@ pt-BR:
   google_analytics_setting_description: "Manage Google Analytics ID" 
   height: Height
   hello_user: "Olá Usuário"
+  history: History
   image: Imagem
   images: Imagens
   in_progress: "In Progress"
@@ -278,6 +280,8 @@ pt-BR:
   locale_changed: "Locale Changed"
   log_in: Entre
   logged_in_as: "Logado como"
+  logged_in_successfully: "Logged in successfully."
+  login_authentication_failed: "Login authentication failed."
   login_name: Login
   logout: Sair
   mail_delivery_enabled:
@@ -285,6 +289,7 @@ pt-BR:
   mail_server_preferences: Mail Server Preferences
   mail_server_settings: "Configuração do Servidor de E-mail"
   master_price: "Preço Principal"
+  month: "Month"
   my_account: "Minha Conta"
   my_orders: "My Orders"
   name: Name
@@ -398,6 +403,7 @@ pt-BR:
   show_out_of_stock_products: "Show out-of-stock products"
   sign_up: Cadastrar
   sku: SKU
+  smtp: SMTP
   smtp_authentication_type: SMTP Authentication Type         
   smtp_domain: SMTP Domain
   smtp_mail_host: SMTP Mail Host                       
@@ -432,12 +438,15 @@ pt-BR:
   taxons: Taxons
   thank_you_for_your_order: "Obrigado por sua compra. Por favor, imprima uma cópia desta página de confirmação para seu controle."
   this_file_language: "Português (Brasil)"
+  to_add_variants_you_must_first_define: "To add variants, you must first define"
   total: Total
   transaction: Transação
   tree: Tree
   try_again: "Tente novamente"
   type: Tipo
+  unable_to_authorize_credit_card: "Unable to Authorize Credit Card"
   unable_to_capture_credit_card: "Unable to Capture Credit Card"
+  unable_to_save_order: "Unable to Save Order"
   update: Atualizar
   updated_successfully:
   use_as_shipping_address: Use as Shipping Address
@@ -457,6 +466,8 @@ pt-BR:
   what_is_this: "O que é isso?"
   whats_this: "What's this"
   width: Width
+  year: "Year"
+  you_have_been_logged_out: "You have been logged out."
   your_cart_is_empty: "Your cart is empty"
   zip: Cep
   zone: Zona
