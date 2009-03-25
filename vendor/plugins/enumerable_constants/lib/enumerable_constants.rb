@@ -164,14 +164,14 @@ class ActiveRecord::Base
       end
     end
     
-    # allow for :connector and :skip_last_comma as used in Array#to_sentence
-    if options[:connector]
-      connector = options[:connector] 
+    # allow for :connector and :last_word_connector as used in Array#to_sentence
+    if options[:words_connector]
+      connector = options[:words_connector] 
     else
       connector = 'or'
     end
-    unless options[:skip_last_comma].kind_of? NilClass
-      skip_last_comma = options[:skip_last_comma] 
+    unless options[:last_word_connector].kind_of? NilClass
+      skip_last_comma = options[:last_word_connector] 
     else
       skip_last_comma = true
     end
@@ -194,7 +194,7 @@ class ActiveRecord::Base
       end
     EOF
 
-    should_be_in_text = set_class.constantize.names.to_sentence :connector => connector, :skip_last_comma => skip_last_comma
+    should_be_in_text = set_class.constantize.names.to_sentence :words_connector => connector, :last_word_connector => skip_last_comma
   
     unless options[:no_validation]
       class_eval <<-EOF  
