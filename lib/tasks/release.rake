@@ -33,7 +33,7 @@ namespace 'spree' do
     s.add_dependency 'rake', '>= 0.7.1'
     s.add_dependency 'highline', '= 1.4.0'
     s.add_dependency 'rails', '= 2.3.2'
-    s.add_dependency 'activemerchant', '= 1.4.1'
+    ### tmp ### s.add_dependency 'activemerchant', '= 1.4.1.1'
     s.add_dependency 'activerecord-tableless', '= 0.1.0' 
     s.add_dependency 'has_many_polymorphs', '= 2.13'     
     s.add_dependency 'calendar_date_select', '= 1.15' 
