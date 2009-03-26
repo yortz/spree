@@ -20,14 +20,9 @@ describe '/admin/variants/edit' do
     
     @option_type = mock_model(OptionType)
     @option_type.stub!(:id => 11, :name => "cow-color", :presentation => "Color")
-
+    
     @option_value = mock_model(OptionValue)
     @option_value.stub!(:id => 111, :option_type => @option_type, :name => 'Red', :position => 1, :presentation => "Red")
-    @option_type.stub!(:option_values => [@option_value])
-    
-    @product_option_type = mock_model(ProductOptionType)
-    @product_option_type.stub!(:product => @product, :option_type => @option_type)
-    @product.product_option_types = [@product_option_type]
     
     @variant = mock_model(Variant)
     @variant.stub!(:sku => "DEL-COW-1A", :price => 49.99, :product => @product, :option_values => [@option_value], :on_hand => 9)
@@ -54,10 +49,14 @@ describe '/admin/variants/edit' do
     render '/admin/variants/edit'
         
     response.should have_tag('form[method=?][action=?]', 'post', "") do
+      with_tag("input[type=?][id=?][value=?]", 'text', 'variant_sku', @variant.sku)
       
       #check that option type and values are displayed (read only)
-      with_tag("label[for=?]", 'new_variant_' + @option_type.presentation)
-      with_tag("input[type=?][disabled=?][value=?]", 'text', 'disabled', @option_value.presentation)
+      with_tag("table") do
+        with_tag("td", :text => @option_type.presentation + ":")
+        with_tag("td", :text => @option_value.presentation)
+      end
+      
       with_tag("input[type=?][id=?][value=?]", 'text', 'variant_sku', @variant.sku)
       with_tag("input[type=?][id=?][value=?]", 'text', 'variant_price', @variant.price)    
       with_tag("input[type=?][id=?][value=?]", 'text', 'variant_on_hand', @variant.on_hand)     
