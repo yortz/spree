@@ -8,14 +8,9 @@ You have chosen to use a card that is part of the 3D-Secure scheme, so you will 
 <img src="/images/vbv_logo_small.gif" alt="Verified by Visa">
 <img src="/images/mcsc_logo.gif" alt="MasterCard SecureCode">
 
-
-<% form = @fragment.call(@callback, '<input type="submit" value="Click to begin 3D secure verification">') 
-%>
-<% session["3Dform"] = form %>
-
 <div align="center">
 <iframe src="/orders/<%= @order.number %>/checkout/secure_form" width="70%" height=500 frameborder=0>
-<%= form %>
+<% session["3Dform"] %>
 </iframe>
 </div>
 

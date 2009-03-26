@@ -4,7 +4,7 @@ class CheckoutController < Spree::BaseController
   before_filter :load_data, :except => :cvv
   before_filter :build_object, :except => [:new, :create, :cvv]
 
-  ssl_required :new, :create, :complete_3dsecure, :callback_3dsecure
+  ssl_required :new, :create, :complete_3dsecure, :callback_3dsecure, :secure_form
 
   protect_from_forgery :except => :callback_3dsecure
 
@@ -22,7 +22,13 @@ class CheckoutController < Spree::BaseController
     
     begin
       result = object.save
-      if result.is_a?(CreditcardTxn)
+
+      if result.is_a?(Proc) 
+        callback = request.protocol + request.host + "/orders/#{@order.number}/checkout/callback_3dsecure"
+        form = result.call(callback, '<input type="submit" value="' + t("click_to_begin_3d_secure_verification") + '">') 
+        session["3Dform"] = form 
+        redirect_to :action => '3dsecure_verification'
+      elsif result.is_a?(CreditcardTxn)
         # remove the order from the session
         session[:order_id] = nil if @order.checkout_complete  
 
@@ -34,10 +40,6 @@ class CheckoutController < Spree::BaseController
                                        :available_methods => @order.shipment.rates }.to_json,
                             :layout => false}
         end
-      elsif result.is_a?(Proc) 
-        @callback = request.protocol + request.host + "/orders/#{@order.number}/checkout/callback_3dsecure"
-        @fragment = result
-        render :action => '3dsecure_verification'
       elsif not result.nil?
         # speculative - surely the only place this can be called????
         # puts "$$$$$$$$$$$$$$$$$$ place - catchall"
@@ -58,7 +60,7 @@ class CheckoutController < Spree::BaseController
   end         
 
   def secure_form
-    render :text => session["3Dform"]
+    render :text => session["3Dform"], :layout => false
   end 
 
   def callback_3dsecure
