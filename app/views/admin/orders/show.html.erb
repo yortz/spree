@@ -7,12 +7,11 @@
 
 <%= render :partial => 'admin/shared/order_details', :locals => {:order => @order} -%>
 
-
 <div class='adr'>
   <% if ! @order.creditcard_payments.empty? %>
     <h4><%= link_to t('bill_address'), edit_admin_order_creditcard_payment_url(@order, @order.creditcard_payments.last) %></h4>
-    <%= render :partial => 'admin/shared/address', :locals => {:address => @order.creditcard_payments.last.address} %>      
-  <% elsif ! @order.user.addresses.empty? %>
+    <%= render :partial => 'admin/shared/address', :locals => {:address => @order.creditcard_payments.last.creditcard.address} %>      
+  <% elsif @order.user && ! @order.user.addresses.empty? %>
     <h4><%= t('bill_address') %> (<%= t('provisional') %>)</h4>
     <%= render :partial => 'admin/shared/address', :locals => {:address => @order.user.addresses.last} %>      
   <% else %>
@@ -31,7 +30,6 @@
   <% end %>
 </div>
 <hr />
-
 
 <% if @order.user %>
   <table class="index">
