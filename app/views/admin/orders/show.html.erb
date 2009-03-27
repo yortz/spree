@@ -7,21 +7,29 @@
 
 <%= render :partial => 'admin/shared/order_details', :locals => {:order => @order} -%>
 
-
 <div class='adr'>
-  <h4><%= link_to "Bill Address", edit_admin_order_creditcard_payment_url(@order, @order.creditcard_payments.last) %></h4>
-  <% if @order.bill_address %>
-    <%= render :partial => 'admin/shared/address', :locals => {:address => @order.bill_address} %>      
+  <% if ! @order.creditcard_payments.empty? %>
+    <h4><%= link_to t('bill_address'), edit_admin_order_creditcard_payment_url(@order, @order.creditcard_payments.last) %></h4>
+    <%= render :partial => 'admin/shared/address', :locals => {:address => @order.creditcard_payments.last.creditcard.address} %>      
+  <% elsif @order.user && ! @order.user.addresses.empty? %>
+    <h4><%= t('bill_address') %> (<%= t('provisional') %>)</h4>
+    <%= render :partial => 'admin/shared/address', :locals => {:address => @order.user.addresses.last} %>      
+  <% else %>
+    <h4><%= t('bill_address') %></h4>
+    <p><%= t('bill_address') %> <%= t('is_not_set_yet') %></p>
   <% end %>
 </div>
 <div class='adr'>
-  <h4><%= link_to "Ship Address", edit_admin_order_shipment_url(@order, @order.shipments.last) %></h4>
   <% if @order.ship_address %>
+    <h4><%= link_to t('ship_address'), edit_admin_order_shipment_url(@order, @order.shipment) %></h4>
     <%= render :partial => 'admin/shared/address', :locals => {:address => @order.ship_address} %>      
+  <% else %>
+    <h4><%= t('ship_address') %></h4>
+    <p><%= t('ship_address') %> <%= t('is_not_set_yet') %></p>
+    <p>
   <% end %>
 </div>
 <hr />
-
 
 <% if @order.user %>
   <table class="index">
