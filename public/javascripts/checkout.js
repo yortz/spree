@@ -242,7 +242,7 @@ var update_shipping_methods = function(methods) {
     var p = document.createElement('p');
     var s = this.name + ' ' + this.rate;
     var i = $(document.createElement('input'))
-                .attr('id', this.id)
+                .attr('id', s)
                 .attr('type', 'radio')
                 .attr('name', 'method_id')
                 .val(this.id)
