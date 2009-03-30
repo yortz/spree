@@ -205,11 +205,16 @@ var submit_shipping = function() {
 var submit_shipping_method = function() {
   //TODO: Move to validate_section('shipping_method'), but must debug how to validate radio buttons
   var valid = false;
-  $('div#methods :child input').each(function() {
-    if($(this).attr('checked')) {
-      valid = true;
-    }
-  });
+  if ($('div#methods :child input').length == 0) {
+    // if there are no radiobuttons, then this section is valid 
+    valid = true;
+  } else { 
+    $('div#methods :child input').each(function() {
+      if($(this).attr('checked')) {
+        valid = true;
+      }
+    });
+  }
   if(valid) {
     // Save what we have so far and get the updated order totals via AJAX
     $.ajax({
