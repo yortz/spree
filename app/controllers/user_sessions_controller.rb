@@ -9,7 +9,7 @@ class UserSessionsController < Spree::BaseController
   def create
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
-      flash[:notice] = t("logged_in_succesfully")
+      flash[:notice] = t("logged_in_successfully")
       redirect_back_or_default products_path
     else
       flash.now[:error] = t("login_failed")
@@ -19,7 +19,7 @@ class UserSessionsController < Spree::BaseController
 
   def destroy
     current_user_session.destroy
-    flash[:notice] = t("logged_out")
+    flash[:notice] = t("you_have_been_logged_out")
     redirect_back_or_default('/')
   end
 end
