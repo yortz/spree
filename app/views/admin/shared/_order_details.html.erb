@@ -23,7 +23,7 @@
   </tr>
   <tr class="total">
     <td colspan="3"><strong><%= t('shipping') %>:</strong> 
-      <% if @order.shipment %>
+      <% if @order.shipment && @order.shipment.shipping_method %>
         (<%= @order.shipment.shipping_method.name %>)
       <% end %>
     </td>
