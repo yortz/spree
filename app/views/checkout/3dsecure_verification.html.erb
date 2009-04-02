@@ -1,4 +1,4 @@
-<h3>3D-Secure Authentication with your Bank</h3>
+<h2>3D-Secure Authentication with your Bank</h2>
 
 <p> To increase the security of Internet transactions, Visa and Mastercard have introduced 3D-Secure (like an online version of Chip and PIN). 
 <br>
@@ -9,7 +9,7 @@ You have chosen to use a card that is part of the 3D-Secure scheme, so you will 
 <img src="/images/mcsc_logo.gif" alt="MasterCard SecureCode">
 
 <div align="center">
-<iframe src="/orders/<%= @order.number %>/checkout/secure_form" width="450" frameborder=0>
+<iframe src="/orders/<%= @order.number %>/checkout/secure_form" width="450" height="420" frameborder=0>
 <% session["3Dform"] %>
 </iframe>
 </div>
