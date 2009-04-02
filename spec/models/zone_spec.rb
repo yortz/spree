@@ -115,18 +115,6 @@ describe Zone do
       @zone.country_list.should == []
     end
     it "should return the corresponding countries if zone kind is country" do
-<<<<<<< HEAD:spec/models/zone_spec.rb
-      country = mock_model(Country)
-      @zone.should_receive(:countries).and_return([country])
-      @zone.country_list.should == [country]
-    end
-    it "should return the countries of the zone children if the kind is zone" do
-      country1 = mock_model(Country)
-      country2 = mock_model(Country)
-      zone1 = mock_model(Zone, :country_list => [country1])
-      zone2 = mock_model(Zone, :country_list => [country2])
-      @zone.stub!(:members).and_return([zone1, zone2])
-=======
       country = Country.new
       @zone.members << ZoneMember.new(:zoneable => country)
       @zone.country_list.should == [country]
@@ -143,7 +131,6 @@ describe Zone do
       
       @zone.members << ZoneMember.new(:zoneable => zone1)
       @zone.members << ZoneMember.new(:zoneable => zone2)
->>>>>>> ad182cd8484d86360f12451eb47f5afc0aa9e70b:spec/models/zone_spec.rb
       @zone.country_list.should == [country1, country2]
     end
   end
