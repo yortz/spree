@@ -19,6 +19,7 @@ class UserSessionsController < Spree::BaseController
 
   def destroy
     current_user_session.destroy
+    session[:order_id] = nil
     flash[:notice] = t("you_have_been_logged_out")
     redirect_back_or_default('/')
   end
