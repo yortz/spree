@@ -28,8 +28,8 @@
 			@states, 
 			:id, 
 			:name, 
-			{:include_blank => true}, 
-			{:style=> 'width:150px;'}) %>
+                        {:include_blank => true}, 
+                        {:class => 'required'}) %>
 		</span>
 		<span class="req">*</span>
 	</p>
@@ -39,7 +39,7 @@
 	</p>    
 	<p id="bcountry">
 		<label for=""><%= t("country") %></label>
-		<span id="bcountry"><%= f.collection_select :bill_address_country_id, @countries, :id, :name, {}, {:style => 'width:150px;', :class => 'required'} %></span>
+		<span id="bcountry"><%= f.collection_select :bill_address_country_id, @countries, :id, :name, {}, {:class => 'required'} %></span>
 	</p>
 	<p id="bphone">
 		<label for=""><%= t("phone") %></label>
