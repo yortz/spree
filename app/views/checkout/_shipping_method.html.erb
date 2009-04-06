@@ -1,5 +1,11 @@
 <h2><%= t("shipping_method") %></h2>
 <div class="inner">
 	<div id="methods"></div>
+        <% if Spree::Config[:shipping_instructions] %>
+          <p id="minstrs">
+            <label for="<%= t("last_name") %>"><%= t("shipping_instructions") %></label>
+            <%= f.text_field :bill_address_lastname, :class => 'required' -%><span class="req">*</span>
+          </p>
+        <% end %>
 	<p><input id="select_shipping_method" type="button" value="<%=t("continue")%>"/></p>
 </div>
