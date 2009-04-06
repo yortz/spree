@@ -122,13 +122,12 @@ class Creditcard < ActiveRecord::Base
     errors.add :year, "is not a valid year" unless valid_expiry_year?(year)
   end
   
+  # TODO: migrate to test for debit cards, using (not yet ready) AM tests for such cards
   def validate_switch_or_solo_attributes #:nodoc:
-    if %w[switch solo].include?(type)
-      unless valid_month?(@start_month) && valid_start_year?(@start_year) || valid_issue_number?(@issue_number)
-        errors.add :start_month, "is invalid" unless valid_month?(@start_month)
-        errors.add :start_year, "is invalid" unless valid_start_year?(@start_year)
-        errors.add :issue_number, "cannot be empty" unless valid_issue_number?(@issue_number)
-      end
+    if %w[switch solo].include?(cc_type)
+      errors.add :start_month, "is invalid" unless valid_month?(start_month)
+      errors.add :start_year, "is invalid" unless valid_start_year?(start_year)
+      errors.add :issue_number, "cannot be empty" unless valid_issue_number?(issue_number)
     end
   end
   
