@@ -8,6 +8,7 @@ class CheckoutPresenter < ActivePresenter::Base
   attr_accessor :shipping_method
   attr_accessor :order_hash   
   attr_accessor :final_answer
+  attr_accessor :shipping_instructions
   
   def initialize(args = {})               
     old_initialize(args)
@@ -33,6 +34,7 @@ class CheckoutPresenter < ActivePresenter::Base
       order.user.addresses << bill_address.clone
       
       order.shipments.create(:address => ship_address, :shipping_method => shipping_method)
+      order.special_instructions = shipping_instructions
       
       order.ship_amount = order.shipment.shipping_method.calculate_shipping(order.shipment) if order.shipment and order.shipment.shipping_method
       order.tax_amount = order.calculate_tax
