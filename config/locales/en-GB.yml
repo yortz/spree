@@ -347,6 +347,7 @@ en-GB:
   parent_category: "Parent Category"
   password: Password
   password_reset_instructions: Password Reset Instructions
+  password_reset_instructions_are_mailed: Password reset instructions have been mailed.
   path: Path
   pay: pay
   payment: Payment
