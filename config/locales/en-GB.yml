@@ -346,6 +346,7 @@ en-GB:
   paid: Paid
   parent_category: "Parent Category"
   password: Password
+  password_reset_instructions: Password Reset Instructions
   path: Path
   pay: pay
   payment: Payment
